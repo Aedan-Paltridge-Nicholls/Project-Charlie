@@ -101,6 +101,7 @@
             this.Controls.Add(this.label1);
             this.Name = "PopupForm";
             this.Text = "Form2";
+            this.Load += new System.EventHandler(this.PopupForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

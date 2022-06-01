@@ -10,16 +10,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+//using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 namespace Project_Charlie
 {
+    
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-            listBox1.Name = "ListBox1";
-        }
+        string conn =
+                @"Data Source=DESKTOP-P39M3QI\SQLEXPRESS;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;";
+       
+
+        
         public bool Imput = false;
         static string Filename()
         {
@@ -33,12 +35,12 @@ namespace Project_Charlie
                 + @"\Meeting information Project Charlie");
             return FilenameMeetings;
         }
-        private void OthermeetingsRead()
-        {
-            string FilenameMeetings = FilenameMeetingInfo();
-            listBox1.Items.Add(File.ReadAllLines(FilenameMeetings));
+        //private void OthermeetingsRead()
+        //{
+        //    string FilenameMeetings = FilenameMeetingInfo();
+        //    listBox1.Items.Add(File.ReadAllLines(FilenameMeetings));
 
-        }
+        //}
         private void OthermeetingsWrite()
         {
             string FilenameMeetings = FilenameMeetingInfo();
@@ -50,12 +52,33 @@ namespace Project_Charlie
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            OthermeetingsRead();
+            //OthermeetingsRead();
             dateTimePicker1.ValueChanged += new System.EventHandler(DateTimePicker1_ValueChanged);
             numericUpDown1.ValueChanged += new System.EventHandler(NumericUpDown1_ValueChanged);
             numericUpDown2.ValueChanged += new System.EventHandler(NumericUpDown2_ValueChanged);
             domainUpDown1.SelectedItemChanged += new System.EventHandler(DomainUpDown1_SelectedItemChanged);
-        }       
+            InitializeComponent();
+            SqlConnection con = new SqlConnection(conn);
+            string sqlquery = " use Visitorinfo;select[Staff_ID],[Meeting_With] from Staff";
+            SqlCommand command = new SqlCommand(sqlquery, con);
+            command.Parameters.Clear();
+            
+                con.Open();
+          
+            SqlDataReader sReader;
+            
+            
+            sReader = command.ExecuteReader();
+
+            while (sReader.Read())
+            {
+                listBox1.Items.Add((sReader["[Staff_ID]"] + " -" + sReader["[Meeting_With]"] + " " + ")"));
+            }
+       
+
+            sReader.Close(); // Calling close() method
+            con.Close();
+        }
         public bool DateSelected = false;       
         private void DateTimePicker1_ValueChanged(object sender, EventArgs e)
         {DateSelected = true;}       
@@ -108,7 +131,7 @@ namespace Project_Charlie
             string PhoneNumberValidater = textBox3.Text;
             string Email = textBox4.Text;
            
-            if (validatePhoneNumber(PhoneNumberValidater) == true)
+            if (ValidatePhoneNumber(PhoneNumberValidater) == true)
             {
                 if (validateEmail(Email) == true)
                 {                   
@@ -138,7 +161,7 @@ namespace Project_Charlie
         }
         public string FName;
         public string LName;       
-        public bool validatePhoneNumber(string PhoneNumberValidater)
+        public bool ValidatePhoneNumber(string PhoneNumberValidater)
         {
             if (PhoneNumberValidater == null)
             {
@@ -193,7 +216,7 @@ namespace Project_Charlie
             {
                 if (LastName == true)
                 {
-                    if (validatePhoneNumber(PhoneNumberValidater) == true)
+                    if (ValidatePhoneNumber(PhoneNumberValidater) == true)
                     {
                         if (PhoneNumber == true)
                         {
@@ -253,6 +276,16 @@ namespace Project_Charlie
                 PopupForm popup = new PopupForm(this);
                 popup.ShowDialog();
             }     
-        }    
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

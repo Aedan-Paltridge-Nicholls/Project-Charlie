@@ -37,5 +37,10 @@ namespace Project_Charlie
         }
         private void button1_Click(object sender, EventArgs e)
         {this.Close();}
+
+        private void PopupForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
